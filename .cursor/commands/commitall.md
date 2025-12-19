@@ -1,0 +1,1 @@
+Commit *all* local changes and push to GitHub (origin) on the current branch **without asking the user for a message**. Auto-generate a Conventional Commit message from the staged changes.

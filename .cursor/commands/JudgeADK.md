@@ -1,0 +1,1 @@
+Follow the instructions in [instructions_to_judge_adk_architecture.md](docs/instructions/instructions_to_judge_adk_architecture.md)

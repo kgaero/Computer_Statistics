@@ -1,0 +1,51 @@
+name: Auto-sync llms-full.txt (monthly)
+
+on:
+  workflow_dispatch: {}        # allow manual run anytime
+  schedule:
+    - cron: "30 00 1 * *"      # 00:30 UTC on the 1st of every month (~06:00 IST)
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch upstream llms-full.txt
+        id: upstream
+        run: |
+          set -euo pipefail
+          mkdir -p tmp
+          curl -fsSL \
+            "https://raw.githubusercontent.com/google/adk-python/main/llms-full.txt" \
+            -o tmp/llms-full.txt
+
+          if [ ! -f llms-full.txt ]; then
+            echo "new=1" >> $GITHUB_OUTPUT
+          elif ! diff -q tmp/llms-full.txt llms-full.txt >/dev/null; then
+            echo "new=1" >> $GITHUB_OUTPUT
+          else
+            echo "new=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update file if changed
+        if: steps.upstream.outputs.new == '1'
+        run: cp tmp/llms-full.txt llms-full.txt
+
+      - name: Commit & push directly to main
+        if: steps.upstream.outputs.new == '1'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto-sync llms-full.txt from google/adk-python@main"
+          file_pattern: "llms-full.txt"
+          branch: main
+
+      - name: No changes
+        if: steps.upstream.outputs.new != '1'
+        run: echo "Already up to date."

@@ -1,0 +1,73 @@
+# .github/workflows/update-submodules-monthly.yml
+name: Monthly submodule update (shallow)
+
+on:
+  schedule:
+    - cron: "30 0 1 * *"          # monthly
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout parent repo (shallow) with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true         # pulls recorded commits
+          fetch-depth: 1           # shallow snapshot, no history
+
+      - name: Bump submodules to latest origin/main (shallow fetch)
+        id: bump
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHANGED=0
+
+          update_submodule () {
+            local path="$1"
+            # Fetch just the tip of the branch, no blobs to keep it tiny
+            git -C "$path" fetch origin main --depth=1 --filter=blob:none
+            local NEW=$(git -C "$path" rev-parse FETCH_HEAD || true)
+            local CUR=$(git -C "$path" rev-parse HEAD || true)
+
+            if [ -n "$NEW" ] && [ "$NEW" != "$CUR" ]; then
+              echo "Updating $path -> $NEW"
+              git -C "$path" checkout --detach "$NEW"
+              git add "$path"
+              CHANGED=1
+            else
+              echo "No change for $path"
+            fi
+          }
+
+          update_submodule refs/A2A
+          update_submodule refs/a2a-retail-demo
+          update_submodule refs/a2a-samples
+          update_submodule refs/adk-docs
+          update_submodule refs/adk-samples
+          update_submodule refs/agentic-trading
+          update_submodule refs/ep2-ai-agent-bake-off
+          update_submodule refs/ai_agent_bake_off_ep_2
+          update_submodule refs/agent-development-kit-crash-course
+          update_submodule refs/adk-python
+
+          echo "changed=$CHANGED" >> $GITHUB_OUTPUT
+
+      - name: (Optional) Sparse-checkout for adk-python paths
+        run: |
+          git -C refs/adk-python sparse-checkout init --cone || true
+          git -C refs/adk-python sparse-checkout set tests pyproject.toml
+
+      - name: Commit & push (only if pointers changed)
+        if: steps.bump.outputs.changed == '1'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: monthly shallow submodule bump to origin/main"
+          branch: main
+
+      - name: Nothing to update
+        if: steps.bump.outputs.changed != '1'
+        run: echo "All submodules already up to date."

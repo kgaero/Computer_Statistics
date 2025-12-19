@@ -1,0 +1,24 @@
+[submodule "refs/A2A"]
+	path = refs/A2A
+	url = https://github.com/a2aproject/A2A.git
+[submodule "refs/a2a-retail-demo"]
+	path = refs/a2a-retail-demo
+	url = https://github.com/abdulzedan/a2a-retail-demo.git
+[submodule "refs/a2a-samples"]
+	path = refs/a2a-samples
+	url = https://github.com/a2aproject/a2a-samples.git
+[submodule "refs/adk-docs"]
+	path = refs/adk-docs
+	url = https://github.com/rajpalgloballogic-cyber/adk-docs.git
+[submodule "refs/adk-samples"]
+	path = refs/adk-samples
+	url = https://github.com/google/adk-samples.git
+[submodule "refs/agentic-trading"]
+	path = refs/agentic-trading
+	url = https://github.com/kweinmeister/agentic-trading.git
+[submodule "refs/agent-development-kit-crash-course"]
+	path = refs/agent-development-kit-crash-course
+	url = https://github.com/bhancockio/agent-development-kit-crash-course.git
+[submodule "refs/adk-python"]
+	path = refs/adk-python
+	url = https://github.com/google/adk-python.git

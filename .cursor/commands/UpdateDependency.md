@@ -1,0 +1,1 @@
+Use the information in `refs/adk-python/pyproject.toml` to improve the dependency resolution in `requirements.txt` 
