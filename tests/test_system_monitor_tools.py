@@ -16,6 +16,8 @@ def _install_google_adk_stubs() -> None:
   agents_module = types.ModuleType("google.adk.agents")
   run_config_module = types.ModuleType("google.adk.agents.run_config")
   tools_module = types.ModuleType("google.adk.tools")
+  genai_module = types.ModuleType("google.genai")
+  genai_types_module = types.ModuleType("google.genai.types")
   psutil_module = types.ModuleType("psutil")
 
   class StreamingMode(Enum):
@@ -44,6 +46,14 @@ def _install_google_adk_stubs() -> None:
     def __init__(self, **kwargs) -> None:
       self.kwargs = kwargs
 
+  class Part:
+    def __init__(self, text: str | None = None) -> None:
+      self.text = text
+
+  class Content:
+    def __init__(self, parts=None) -> None:
+      self.parts = parts or []
+
   class Error(Exception):
     """Stub psutil.Error."""
 
@@ -54,17 +64,23 @@ def _install_google_adk_stubs() -> None:
   agents_module.SequentialAgent = SequentialAgent
   tools_module.ToolContext = ToolContext
   tools_module.FunctionTool = FunctionTool
+  genai_types_module.Part = Part
+  genai_types_module.Content = Content
+  genai_module.types = genai_types_module
   psutil_module.Error = Error
 
   adk_module.agents = agents_module
   adk_module.tools = tools_module
   google_module.adk = adk_module
+  google_module.genai = genai_module
 
   sys.modules["google"] = google_module
   sys.modules["google.adk"] = adk_module
   sys.modules["google.adk.agents"] = agents_module
   sys.modules["google.adk.agents.run_config"] = run_config_module
   sys.modules["google.adk.tools"] = tools_module
+  sys.modules["google.genai"] = genai_module
+  sys.modules["google.genai.types"] = genai_types_module
   sys.modules["psutil"] = psutil_module
 
 
