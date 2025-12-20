@@ -98,7 +98,7 @@ Follow this structure exactly whenever you rebuild or update `docs/ai_docs/googl
 * **Session State:**  
   - **reads:** `[state_key_1, state_key_2, …]`  
   - **writes:** `[state_key_3, state_key_4, …]`  
-* **Model:** from `llms-full.txt` (e.g., `gemini-2.5-flash`)  
+* **Model:** from `llms-full.txt` (e.g., `gemma-3-27b-it`)  
 * **Budget / Policy:** `{ max_tokens, max_cost_usd, allow_web, max_iterations, … }`  
 
 ---
@@ -234,7 +234,7 @@ This document provides a complete implementation of a sophisticated **competitor
   * `initialize_research_state` (seed keys, budgets, guardrails)
   * `checkpoint_gate` (requires user approval on plan & scope changes)
 * **Session State**: reads `user_request`; writes `research_context`, `research_plan`, `controls`
-* **Model**: `gemini-2.5-flash`
+* **Model**: `gemma-3-27b-it`
 * **Budget/Policy**:
 
   * `controls.max_cost_usd = 12.00`
@@ -253,7 +253,7 @@ This document provides a complete implementation of a sophisticated **competitor
 * **Tools**: `google_search (topic sanity only; 3 calls max)`
 * **Callbacks**: `validate_plan_schema` (JSON schema enforcement)
 * **Session State**: reads `user_request`, `research_context`; writes `research_plan`
-* **Model**: `gemini-2.5-flash`
+* **Model**: `gemma-3-27b-it`
 
 
 ---
@@ -281,7 +281,7 @@ This document provides a complete implementation of a sophisticated **competitor
 * **Tools**: None
 * **Callbacks**: `token_budget_guard`
 * **Session State**: reads `research_plan`; writes `research_sections` (with step DAG)
-* **Model**: `gemini-2.5-flash`
+* **Model**: `gemma-3-27b-it`
 
 
 ---
@@ -303,7 +303,7 @@ This document provides a complete implementation of a sophisticated **competitor
   * `collect_research_sources_callback` (append to `sources_log`)
   * `source_dedup_normalizer` (canonicalize URLs, strip tracking params)
 * **Session State**: reads `research_sections`; writes `research_findings` (per section: facts, quotes, tables, `source_ids`)
-* **Model**: `gemini-2.5-flash`
+* **Model**: `gemma-3-27b-it`
 
 
 ---
@@ -334,7 +334,7 @@ This document provides a complete implementation of a sophisticated **competitor
 * **Tools**: None
 * **Callbacks**: `hallucination_check` (flags unverifiable claims)
 * **Session State**: reads `research_findings`; writes `evaluation_result`
-* **Model**: `gemini-2.5-pro`
+* **Model**: `gemma-3-27b-it`
 
 
 ---
@@ -355,7 +355,7 @@ This document provides a complete implementation of a sophisticated **competitor
   * `rank_merge_dedup_callback` (**NEW**: reciprocal-rank fusion + domain diversity)
   * `budget_checkpoint_callback` (deny over-budget expansions)
 * **Session State**: reads `repair_actions`, `research_findings`; writes `enhanced_research_findings`
-* **Model**: `gemini-2.5-flash`
+* **Model**: `gemma-3-27b-it`
 
 
 ---
@@ -383,7 +383,7 @@ This document provides a complete implementation of a sophisticated **competitor
   * `citation_replacement_callback` (`[1]` style → `(Author, Year)` or footnotes)
   * `appendix_builder_callback` (Sources log → Appendix A)
 * **Session State**: reads `research_findings`, `sources_log`; writes `final_report`, `citations_csl_json`
-* **Model**: `gemini-2.5-pro`
+* **Model**: `gemma-3-27b-it`
 
 
 ---

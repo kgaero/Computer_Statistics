@@ -12,7 +12,7 @@ DISK_AGENT_INSTRUCTION = (
 
 disk_agent = LlmAgent(
   name="disk_monitor",
-  model="gemini-2.5-flash",
+  model="gemma-3-27b-it",
   description="Collects disk usage statistics.",
   instruction=DISK_AGENT_INSTRUCTION,
   tools=[FunctionTool(func=collect_disk_stats)],

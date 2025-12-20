@@ -12,7 +12,7 @@ MEMORY_AGENT_INSTRUCTION = (
 
 memory_agent = LlmAgent(
   name="memory_monitor",
-  model="gemini-2.5-flash",
+  model="gemma-3-27b-it",
   description="Collects memory usage statistics.",
   instruction=MEMORY_AGENT_INSTRUCTION,
   tools=[FunctionTool(func=collect_memory_stats)],

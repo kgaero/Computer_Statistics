@@ -12,7 +12,7 @@ SUMMARY_AGENT_INSTRUCTION = (
 
 summary_agent = LlmAgent(
   name="summary_reporter",
-  model="gemini-2.5-flash",
+  model="gemma-3-27b-it",
   description="Summarizes system stats into a plain-text report.",
   instruction=SUMMARY_AGENT_INSTRUCTION,
   tools=[FunctionTool(func=generate_summary_report)],

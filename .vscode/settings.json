@@ -1,3 +1,11 @@
 {
-    "chatgpt.openOnStartup": true
+    "chatgpt.openOnStartup": true,
+    "terminal.integrated.profiles.windows": {
+        "WSL": {
+            "source": "wsl",
+            "path": "wsl.exe",
+            "args": []
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "WSL"
 }

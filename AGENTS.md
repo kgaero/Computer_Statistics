@@ -271,7 +271,7 @@ agents/
 ```python
 root_agent = Agent(
   name="manager",
-  model="gemma-2-27b-it",
+  model="gemma-3-27b-it",
   description="Manager agent",
   instruction="Delegate to specialists...",
   sub_agents=[stock_analyst, funny_nerd],
@@ -287,7 +287,7 @@ from google.adk.tools.agent_tool import AgentTool
 
 root_agent = Agent(
   name="manager",
-  model="gemma-2-27b-it",
+  model="gemma-3-27b-it",
   description="Root Agent",
   instruction="Use specialists as tools...",
   tools=[AgentTool(news_analyst)],
@@ -309,7 +309,7 @@ coding_agent = Agent(..., tools=[built_in_code_execution])
 
 root_agent = Agent(
   name="RootAgent",
-  model="gemma-2-27b-it",
+  model="gemma-3-27b-it",
   description="Root Agent",
   tools=[
     agent_tool.AgentTool(agent=search_agent),
