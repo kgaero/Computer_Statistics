@@ -1,5 +1,6 @@
 """CPU collection tool for OneClickSystemMonitor."""
 
+from datetime import datetime, timezone
 from typing import Any
 
 import psutil
@@ -78,6 +79,7 @@ def collect_cpu_stats(tool_context: ToolContext) -> dict[str, Any]:
   }
 
   tool_context.state["cpu_stats"] = data
+  tool_context.state["timestamp"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
   return {
     "status": "ok",
