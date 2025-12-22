@@ -1,6 +1,7 @@
 """CPU statistics sub-agent for OneClickSystemMonitor."""
 
 from google.adk.agents import LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools import FunctionTool
 
 from ...tools import collect_cpu_stats
@@ -12,7 +13,10 @@ CPU_AGENT_INSTRUCTION = (
 
 cpu_agent = LlmAgent(
   name="cpu_monitor",
-  model="gemma-3-27b-it",
+  model=LiteLlm(
+    model="openai/gpt-oss-20b-maas",
+    custom_llm_provider="vertex_ai",
+  ),
   description="Collects CPU usage statistics.",
   instruction=CPU_AGENT_INSTRUCTION,
   tools=[FunctionTool(func=collect_cpu_stats)],

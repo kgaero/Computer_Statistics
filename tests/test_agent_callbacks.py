@@ -105,3 +105,4 @@ def test_after_agent_callback_ignores_other_text():
   result = only_ram_after_agent_callback(context)
 
   assert result is None
+

@@ -1,6 +1,7 @@
 """Memory statistics sub-agent for OneClickSystemMonitor."""
 
 from google.adk.agents import LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools import FunctionTool
 
 from ...tools import collect_memory_stats
@@ -12,7 +13,10 @@ MEMORY_AGENT_INSTRUCTION = (
 
 memory_agent = LlmAgent(
   name="memory_monitor",
-  model="gemma-3-27b-it",
+  model=LiteLlm(
+    model="openai/gpt-oss-20b-maas",
+    custom_llm_provider="vertex_ai",
+  ),
   description="Collects memory usage statistics.",
   instruction=MEMORY_AGENT_INSTRUCTION,
   tools=[FunctionTool(func=collect_memory_stats)],
