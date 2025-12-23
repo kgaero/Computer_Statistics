@@ -1,4 +1,6 @@
 google-adk[database,eval]
+openinference-instrumentation-google-adk
+arize-otel
 yfinance
 psutil
 litellm>=1.75.5

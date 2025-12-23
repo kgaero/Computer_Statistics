@@ -4,10 +4,13 @@ from google.adk.agents import ParallelAgent, SequentialAgent
 from google.adk.agents.run_config import RunConfig, StreamingMode
 
 from .callbacks import only_ram_after_agent_callback, skip_agent_if_requested
+from deployment.observability import configure_arize_ax
 from .sub_agents.cpu.agent import cpu_agent
 from .sub_agents.disk.agent import disk_agent
 from .sub_agents.memory.agent import memory_agent
 from .sub_agents.summary.agent import summary_agent
+
+configure_arize_ax()
 
 RUN_CONFIG = RunConfig(
   streaming_mode=StreamingMode.NONE,

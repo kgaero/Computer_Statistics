@@ -7,6 +7,7 @@ import types
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.append(str(ROOT_DIR))
+sys.path.append(str(ROOT_DIR / "agents"))
 
 
 def _install_google_adk_stubs() -> None:

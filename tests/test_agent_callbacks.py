@@ -6,6 +6,7 @@ import types
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.append(str(ROOT_DIR))
+sys.path.append(str(ROOT_DIR / "agents"))
 
 
 def _install_genai_stubs() -> None:
@@ -105,4 +106,3 @@ def test_after_agent_callback_ignores_other_text():
   result = only_ram_after_agent_callback(context)
 
   assert result is None
-
