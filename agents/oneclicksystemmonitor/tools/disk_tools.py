@@ -7,6 +7,7 @@ import psutil
 from google.adk.tools import ToolContext
 
 from .units import bytes_to_gb, bytes_to_mb
+from deployment.observability import trace_chain, trace_tool
 
 THROUGHPUT_SAMPLE_INTERVAL = 0.1
 THROUGHPUT_UNAVAILABLE_REASON = "Disk throughput not supported."
@@ -14,6 +15,7 @@ FRAGMENTATION_UNAVAILABLE_REASON = "Disk fragmentation not available."
 PARTITION_SKIP_FS_TYPES = {"", "tmpfs", "devtmpfs"}
 
 
+@trace_chain()
 def _get_drive_usage() -> list[dict[str, Any]]:
   """Collect drive usage details per partition."""
   drives = []
@@ -42,6 +44,7 @@ def _get_drive_usage() -> list[dict[str, Any]]:
   return drives
 
 
+@trace_chain()
 async def _get_throughput() -> tuple[float | None, float | None, str | None]:
   """Sample disk throughput using io counters."""
   try:
@@ -61,6 +64,7 @@ async def _get_throughput() -> tuple[float | None, float | None, str | None]:
   return round(read_mb_s / interval, 2), round(write_mb_s / interval, 2), None
 
 
+@trace_tool()
 async def collect_disk_stats(tool_context: ToolContext) -> dict[str, Any]:
   """Collect disk statistics using psutil."""
   drives = _get_drive_usage()

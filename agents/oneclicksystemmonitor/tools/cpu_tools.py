@@ -5,6 +5,8 @@ from typing import Any
 import psutil
 from google.adk.tools import ToolContext
 
+from deployment.observability import trace_chain, trace_tool
+
 CPU_SAMPLE_INTERVAL = 0.1
 TEMPERATURE_UNAVAILABLE_REASON = "CPU temperature not supported."
 TOP_PROCESS_UNAVAILABLE_REASON = "Top process data unavailable."
@@ -18,6 +20,7 @@ class _ProcessSummary:
     self.cpu_percent = cpu_percent
 
 
+@trace_chain()
 def _get_top_process() -> _ProcessSummary | None:
   """Return the top CPU process if available."""
   top_process = None
@@ -34,6 +37,7 @@ def _get_top_process() -> _ProcessSummary | None:
   return top_process
 
 
+@trace_chain()
 def _get_temperature() -> tuple[float | None, str | None]:
   """Return the first available CPU temperature reading."""
   try:
@@ -51,6 +55,7 @@ def _get_temperature() -> tuple[float | None, str | None]:
   return None, TEMPERATURE_UNAVAILABLE_REASON
 
 
+@trace_tool()
 def collect_cpu_stats(tool_context: ToolContext) -> dict[str, Any]:
   """Collect CPU statistics using psutil."""
   per_core = psutil.cpu_percent(interval=CPU_SAMPLE_INTERVAL, percpu=True)

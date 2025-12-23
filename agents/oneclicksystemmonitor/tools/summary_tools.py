@@ -5,6 +5,8 @@ from typing import Any
 
 from google.adk.tools import ToolContext
 
+from deployment.observability import trace_chain, trace_tool
+
 HIGH_LOAD_LABEL = "High load"
 MODERATE_LOAD_LABEL = "Moderate load"
 LOW_LOAD_LABEL = "Low load"
@@ -20,12 +22,14 @@ DISK_HIGH_THRESHOLD = 85
 DISK_MODERATE_THRESHOLD = 70
 
 
+@trace_chain()
 def _format_timestamp() -> str:
   """Return a timezone-aware timestamp string."""
   now = datetime.now(timezone.utc).astimezone()
   return now.strftime("%Y-%m-%d %H:%M %Z")
 
 
+@trace_chain()
 def _memory_status(available_percent: float) -> tuple[str, str]:
   """Return memory status label and guidance."""
   if available_percent <= MEMORY_HIGH_THRESHOLD:
@@ -35,6 +39,7 @@ def _memory_status(available_percent: float) -> tuple[str, str]:
   return "Low usage", "memory usage looks healthy."
 
 
+@trace_chain()
 def _cpu_status(usage_percent: float) -> tuple[str, str]:
   """Return CPU status label and guidance."""
   if usage_percent >= CPU_HIGH_THRESHOLD:
@@ -44,6 +49,7 @@ def _cpu_status(usage_percent: float) -> tuple[str, str]:
   return "Low usage", "CPU load looks healthy."
 
 
+@trace_chain()
 def _disk_status(drives: list[dict[str, Any]]) -> tuple[str, str]:
   """Return disk status label and guidance."""
   highest_usage = 0
@@ -57,6 +63,7 @@ def _disk_status(drives: list[dict[str, Any]]) -> tuple[str, str]:
   return "Low usage", "disk usage looks healthy."
 
 
+@trace_chain()
 def _overall_status(statuses: list[str]) -> str:
   """Return overall status based on section statuses."""
   if "High" in statuses:
@@ -66,6 +73,7 @@ def _overall_status(statuses: list[str]) -> str:
   return LOW_LOAD_LABEL
 
 
+@trace_chain()
 def _format_memory_section(memory_stats: dict[str, Any]) -> SectionResult:
   """Render the memory section and return its status label."""
   status_label, guidance = _memory_status(memory_stats["available_percent"])
@@ -81,6 +89,7 @@ def _format_memory_section(memory_stats: dict[str, Any]) -> SectionResult:
   return "\n".join(lines), status_label
 
 
+@trace_chain()
 def _format_cpu_section(cpu_stats: dict[str, Any]) -> SectionNotesResult:
   """Render the CPU section and return its status and notes."""
   status_label, guidance = _cpu_status(cpu_stats["usage_percent"])
@@ -118,6 +127,7 @@ def _format_cpu_section(cpu_stats: dict[str, Any]) -> SectionNotesResult:
   return "\n".join(lines), status_label, notes
 
 
+@trace_chain()
 def _format_disk_section(disk_stats: dict[str, Any]) -> SectionNotesResult:
   """Render the disk section and return its status and notes."""
   drives = disk_stats.get("drives", [])
@@ -158,6 +168,7 @@ def _format_disk_section(disk_stats: dict[str, Any]) -> SectionNotesResult:
   return "\n".join(lines), status_label, notes
 
 
+@trace_tool()
 def generate_summary_report(tool_context: ToolContext) -> dict[str, Any]:
   """Generate a plain-text summary report using collected stats."""
   memory_stats = tool_context.state.get("memory_stats")

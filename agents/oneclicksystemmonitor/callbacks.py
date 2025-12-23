@@ -6,6 +6,8 @@ from typing import Optional, TYPE_CHECKING
 
 from google.genai import types
 
+from deployment.observability import trace_chain
+
 SKIP_KEYWORD = "skip"
 ONLY_RAM_KEYWORD = "only ram"
 SKIP_RESPONSE = "Skipping agent execution as requested."
@@ -16,6 +18,7 @@ if TYPE_CHECKING:
   from google.adk.agents.callback_context import CallbackContext
 
 
+@trace_chain()
 def _normalize_user_text(user_content: Optional[types.Content]) -> str:
   """Return lowercase user text extracted from content parts."""
   if not user_content or not user_content.parts:
@@ -30,6 +33,7 @@ def _normalize_user_text(user_content: Optional[types.Content]) -> str:
   return " ".join(text_parts).strip().lower()
 
 
+@trace_chain()
 def skip_agent_if_requested(
   callback_context: "CallbackContext",
 ) -> Optional[types.Content]:
@@ -40,6 +44,7 @@ def skip_agent_if_requested(
   return None
 
 
+@trace_chain()
 def only_ram_after_agent_callback(
   callback_context: "CallbackContext",
 ) -> Optional[types.Content]:

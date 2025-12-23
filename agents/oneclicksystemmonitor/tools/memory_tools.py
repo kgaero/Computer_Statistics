@@ -5,11 +5,14 @@ from typing import Any
 import psutil
 from google.adk.tools import ToolContext
 
+from deployment.observability import trace_tool
+
 from .units import bytes_to_gb
 
 CACHE_UNAVAILABLE_REASON = "Cache metric not available on this platform."
 
 
+@trace_tool()
 def collect_memory_stats(tool_context: ToolContext) -> dict[str, Any]:
   """Collect memory statistics using psutil."""
   memory = psutil.virtual_memory()
