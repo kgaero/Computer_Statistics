@@ -1,5 +1,6 @@
 """Tests for OneClickSystemMonitor agent callbacks."""
 
+import json
 from pathlib import Path
 import sys
 import types
@@ -40,6 +41,7 @@ _install_genai_stubs()
 
 from google.genai import types as genai_types  # noqa: E402
 from agents.oneclicksystemmonitor.callbacks import (  # noqa: E402
+  log_summary_input_payload,
   only_ram_after_agent_callback,
   skip_agent_if_requested,
 )
@@ -106,3 +108,29 @@ def test_after_agent_callback_ignores_other_text():
   result = only_ram_after_agent_callback(context)
 
   assert result is None
+
+
+def test_log_summary_input_payload_writes_jsonl(monkeypatch):
+  log_path = Path("agents/summary_inputs_test.jsonl")
+  monkeypatch.setenv("SUMMARY_AGENT_INPUT_LOG_PATH", str(log_path))
+  context = DummyCallbackContext(
+    "Full report please",
+    state={
+      "cpu_stats": {"usage_percent": 12.5},
+      "api_key": "secret",
+    },
+  )
+
+  try:
+    result = log_summary_input_payload(context)
+
+    assert result is None
+    assert log_path.exists()
+    payload = json.loads(log_path.read_text(encoding="utf-8").strip())
+    assert payload["schema_version"] == "summary-input-v1"
+    assert payload["user_request"] == "Full report please"
+    assert payload["metrics"]["cpu_stats"]["usage_percent"] == 12.5
+    assert payload["state"]["api_key"] == "[REDACTED]"
+  finally:
+    if log_path.exists():
+      log_path.unlink()
