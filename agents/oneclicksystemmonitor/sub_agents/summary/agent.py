@@ -13,7 +13,7 @@ SUMMARY_AGENT_INSTRUCTION = (
 summary_agent = LlmAgent(
   name="summary_reporter",
   model="gemma-3-27b-it",
-  description="Summarizes system stats into a plain-text report.",
+  description="Summarizes system stats into a plain-text report. Always call the generate_summary_report tool to generate the report.",
   instruction=SUMMARY_AGENT_INSTRUCTION,
   tools=[FunctionTool(func=generate_summary_report)],
 )
