@@ -7,6 +7,8 @@ from ...callbacks import log_summary_input_payload
 
 # ENDPOINT_ID = "8117895558498091008"
 ENDPOINT_ID = "2340903136488587264"
+# https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini-supervised-tuning-prepare
+
 
 summary_agent = LlmAgent(
   name="summary_reporter",
